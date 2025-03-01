@@ -2,10 +2,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
-
-
+    namespace "com.frank.mp3"
+    compileSdk rootProject.ext.targetSdkVersion
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -44,6 +42,11 @@ android {
     packagingOptions {
         pickFirst 'lib/armeabi-v7a/libmp3lame.so'
         pickFirst 'lib/arm64-v8a/libmp3lame.so'
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

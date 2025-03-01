@@ -3,8 +3,8 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    namespace "com.frank.ffmpeg"
+    compileSdk rootProject.ext.targetSdkVersion
     defaultConfig {
         applicationId "com.frank.ffmpeg"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -42,8 +42,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     packagingOptions {
@@ -65,12 +65,12 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "androidx.appcompat:appcompat:$rootProject.appcompatVersion"
     implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerviewVersion"
-    implementation project(':Live')
     implementation "androidx.core:core-ktx:$rootProject.core_ktx"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.lifecycle_ktx"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation project(':AndroidMedia')
-    //implementation "libmp3" if you need mp3-lite module
-//    implementation project(':libmp3')
-    implementation project(':CameraFilter')
+
+    implementation project(path: ':Live')
+    implementation project(path: ':libmp3')
+    implementation project(path: ':AndroidMedia')
+    implementation project(path: ':CameraFilter')
+    implementation 'com.blankj:utilcodex:1.31.1'
 }
