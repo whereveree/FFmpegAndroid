@@ -33,6 +33,7 @@ import com.frank.ffmpeg.handler.FFmpegHandler.MSG_BEGIN
 import com.frank.ffmpeg.handler.FFmpegHandler.MSG_FINISH
 import com.frank.ffmpeg.handler.FFmpegHandler.MSG_PROGRESS
 import com.frank.ffmpeg.listener.OnItemClickListener
+import com.frank.ffmpeg.utils.FileUriUtils
 import java.util.Locale
 
 /**
@@ -174,8 +175,7 @@ class VideoHandleActivity : BaseActivity() {
         if (!FileUtil.checkFileExist(srcFile)) {
             return
         }
-        if (!FileUtil.isVideo(srcFile)
-                && (list as List<String>)[currentPosition] != getString(R.string.video_zoom)) {
+        if ((list as List<String>)[currentPosition] != getString(R.string.video_zoom)) {
             showToast(getString(R.string.wrong_video_format))
             return
         }

@@ -70,8 +70,7 @@ class AudioHandleActivity : BaseActivity() {
                         FileUtil.deleteFile(outputPath2)
                     }
                     if (infoBuilder != null) {
-                        Toast.makeText(this@AudioHandleActivity,
-                                infoBuilder.toString(), Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@AudioHandleActivity, infoBuilder.toString(), Toast.LENGTH_LONG).show()
                         infoBuilder = null
                     }
                     if (!outputPath.isNullOrEmpty() && !this@AudioHandleActivity.isDestroyed) {

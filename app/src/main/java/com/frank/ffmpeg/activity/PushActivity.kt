@@ -34,7 +34,7 @@ class PushActivity : BaseActivity() {
 
     private fun initView() {
         editInputPath = getView(R.id.edit_file_path)
-        editLiveURL   = getView(R.id.edit_live_url)
+        editLiveURL = getView(R.id.edit_live_url)
         editInputPath!!.setText(INPUT_PATH)
         editLiveURL!!.setText(LIVE_URL)
 
@@ -43,7 +43,7 @@ class PushActivity : BaseActivity() {
 
     private fun startPushStreaming() {
         val filePath = editInputPath!!.text.toString()
-        val liveUrl  = editLiveURL!!.text.toString()
+        val liveUrl = editLiveURL!!.text.toString()
 
         if (!TextUtils.isEmpty(filePath) && !TextUtils.isEmpty(filePath)) {
             Thread(Runnable {

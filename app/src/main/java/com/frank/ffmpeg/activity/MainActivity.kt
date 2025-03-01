@@ -76,7 +76,7 @@ class MainActivity : BaseActivity() {
             }
         })
         viewWaterfall.adapter = adapter
-        findViewById<TextView>(R.id.tv_version).text =" Version:"+FFmpegCmd.getInfo()
+        findViewById<TextView>(R.id.tv_version).text = " Version:${FFmpegCmd.getInfo()}"
     }
 
     private fun doClick(pos: Int) {

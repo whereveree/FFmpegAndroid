@@ -13,10 +13,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import com.blankj.utilcode.util.UriUtils
 import com.frank.ffmpeg.FFmpegApplication
 
 import com.frank.ffmpeg.R
 import com.frank.ffmpeg.util.ContentUtil
+import com.frank.ffmpeg.utils.FileUriUtils
 import java.lang.Exception
 
 /**
@@ -78,8 +80,9 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
 
         try {
             if (data != null && data.data != null) {
-                val filePath = ContentUtil.getPath(this, data.data!!)
-                Log.i(TAG, "filePath=" + filePath!!)
+                val filePath = UriUtils.uri2File(data.data).absolutePath
+                val isVideo = FileUriUtils.isVideo(this, data.data)
+                Log.i(TAG, "is video?=$isVideo; file path=$filePath")
                 onSelectedFile(filePath)
             }
         } catch (e : Exception) {
@@ -95,8 +98,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_select -> selectFile()
-            else -> {
-            }
+            else -> {}
         }
         return super.onOptionsItemSelected(item)
     }

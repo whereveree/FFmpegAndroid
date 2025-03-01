@@ -226,7 +226,7 @@ open class Mp3Converter {
                 val mMediaFormat = mediaExtractor!!.getTrackFormat(i)
                 Log.i(TAG, "prepareDecode get mMediaFormat=$mMediaFormat")
 
-                val mime = mMediaFormat.getString(MediaFormat.KEY_MIME)
+                val mime = mMediaFormat.getString(MediaFormat.KEY_MIME)!!
                 if (mime.startsWith("audio")) {
                     mMediaCodec = MediaCodec.createDecoderByType(mime)
                     mMediaCodec!!.configure(mMediaFormat, null, null, 0)
