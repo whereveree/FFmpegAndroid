@@ -33,7 +33,6 @@ import com.frank.ffmpeg.handler.FFmpegHandler.MSG_BEGIN
 import com.frank.ffmpeg.handler.FFmpegHandler.MSG_FINISH
 import com.frank.ffmpeg.handler.FFmpegHandler.MSG_PROGRESS
 import com.frank.ffmpeg.listener.OnItemClickListener
-import com.frank.ffmpeg.utils.FileUriUtils
 import java.util.Locale
 
 /**

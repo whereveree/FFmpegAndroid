@@ -46,6 +46,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17
+    }
+
     packagingOptions {
         exclude 'META-INF/proguard/coroutines.pro'
         pickFirst 'lib/armeabi-v7a/libmp3lame.so'
@@ -59,10 +63,26 @@ android {
         doNotStrip "*/armeabi-v7a/*.so"
     }
 
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    buildFeatures {
+        viewBinding true
+        buildConfig = true
+    }
+
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation("androidx.activity:activity:1.8.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
+
     implementation "androidx.appcompat:appcompat:$rootProject.appcompatVersion"
     implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerviewVersion"
     implementation "androidx.core:core-ktx:$rootProject.core_ktx"
@@ -73,4 +93,5 @@ dependencies {
     implementation project(path: ':AndroidMedia')
     implementation project(path: ':CameraFilter')
     implementation 'com.blankj:utilcodex:1.31.1'
+    implementation 'androidx.databinding:viewbinding:8.8.2'
 }

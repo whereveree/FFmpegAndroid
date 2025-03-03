@@ -17,8 +17,7 @@ import com.blankj.utilcode.util.UriUtils
 import com.frank.ffmpeg.FFmpegApplication
 
 import com.frank.ffmpeg.R
-import com.frank.ffmpeg.util.ContentUtil
-import com.frank.ffmpeg.utils.FileUriUtils
+import com.frank.ffmpeg.utils.UriTools
 import java.lang.Exception
 
 /**
@@ -32,10 +31,10 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && checkSelfPermission(permissions[0]) != PackageManager.PERMISSION_GRANTED
-                && checkSelfPermission(permissions[1]) != PackageManager.PERMISSION_GRANTED) {
+            && checkSelfPermission(permissions[0]) != PackageManager.PERMISSION_GRANTED
+            && checkSelfPermission(permissions[1]) != PackageManager.PERMISSION_GRANTED)
+        {
             requestPermission()
         }
         setContentView(layoutId)
@@ -81,7 +80,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener {
         try {
             if (data != null && data.data != null) {
                 val filePath = UriUtils.uri2File(data.data).absolutePath
-                val isVideo = FileUriUtils.isVideo(this, data.data)
+                val isVideo = UriTools.isVideo(this, data.data)
                 Log.i(TAG, "is video?=$isVideo; file path=$filePath")
                 onSelectedFile(filePath)
             }

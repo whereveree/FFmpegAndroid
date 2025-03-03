@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
 
-object FileUriUtils {
+object UriTools {
 
     fun isVideo(context: Context, uri: Uri?): Boolean {
         if (uri == null) return false

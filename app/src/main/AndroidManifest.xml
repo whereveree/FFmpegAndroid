@@ -47,7 +47,7 @@
         <activity
             android:name=".activity.FilterActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".activity.VideoPreviewActivity" />
+        <activity android:name=".ui.VideoPreviewActivity" />
         <activity android:name=".activity.ProbeFormatActivity" />
         <activity android:name=".activity.AudioEffectActivity" />
         <activity android:name=".activity.AudioPlayActivity" />
