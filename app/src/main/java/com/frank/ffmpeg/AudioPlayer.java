@@ -18,20 +18,8 @@ public class AudioPlayer {
 
     private AudioTrack mAudioTrack;
 
-    private native long native_init();
-
-    private native void native_play(long context, String audioPath, String filter);
-
-    private native void native_again(long context, String filterDesc);
-
-    private native long native_get_position(long context);
-
-    private native long native_get_duration(long context);
-
-    private native void native_release(long context);
-
     public void play(String audioPath, String filter) {
-        audioContext = native_init();
+        audioContext = initNativePlayer();
         native_play(audioContext, audioPath, filter);
     }
 
@@ -139,4 +127,15 @@ public class AudioPlayer {
         }
     }
 
+    private native long initNativePlayer();
+
+    private native void native_play(long context, String audioPath, String filter);
+
+    private native void native_again(long context, String filterDesc);
+
+    private native long native_get_position(long context);
+
+    private native long native_get_duration(long context);
+
+    private native void native_release(long context);
 }

@@ -23,20 +23,13 @@ public class FFmpegCmd {
         System.loadLibrary("media-handle");
     }
 
-    private final static String TAG = FFmpegCmd.class.getSimpleName();
-
-    private final static int RESULT_SUCCESS = 1;
-
-    private final static int RESULT_ERROR = 0;
-
-    private static OnHandleListener mProgressListener;
-
+    private static final String TAG = FFmpegCmd.class.getSimpleName();
+    private static OnHandleListener handleListener;
+    private static final int RESULT_SUCCESS = 1;
+    private static final int RESULT_ERROR = 0;
     private static final int STATE_INIT = 0;
-
     private static final int STATE_RUNNING = 1;
-
     private static final int STATE_FINISH = 2;
-
     private static final int STATE_ERROR = 3;
 
     @Documented
@@ -46,24 +39,22 @@ public class FFmpegCmd {
 
     /**
      * Execute FFmpeg command
-     * @param commands the String array of command
+     *
+     * @param commands         the String array of command
      * @param onHandleListener the callback for executing command
      */
     public static void execute(final String[] commands, final OnHandleListener onHandleListener) {
-        mProgressListener = onHandleListener;
-        ThreadPoolUtil.INSTANCE.executeSingleThreadPool(new Runnable() {
-            @Override
-            public void run() {
-                if (onHandleListener != null) {
-                    onHandleListener.onBegin();
-                }
-                //call JNI interface to execute FFmpeg cmd
-                int result = handle(commands);
-                if (onHandleListener != null) {
-                    onHandleListener.onEnd(result, "");
-                }
-                mProgressListener = null;
+        handleListener = onHandleListener;
+        ThreadPoolUtil.INSTANCE.executeSingleThreadPool(() -> {
+            if (onHandleListener != null) {
+                onHandleListener.onBegin();
             }
+            //call JNI interface to execute FFmpeg cmd
+            int result = handle(commands);
+            if (onHandleListener != null) {
+                onHandleListener.onEnd(result, "");
+            }
+            handleListener = null;
         });
     }
 
@@ -73,30 +64,28 @@ public class FFmpegCmd {
 
     /**
      * Execute FFmpeg multi commands
-     * @param commands the String array of command
+     *
+     * @param commands         the String array of command
      * @param onHandleListener the callback for executing command
      */
     public static void execute(final List<String[]> commands, final OnHandleListener onHandleListener) {
-        mProgressListener = onHandleListener;
-        ThreadPoolUtil.INSTANCE.executeSingleThreadPool(new Runnable() {
-            @Override
-            public void run() {
-                if (onHandleListener != null) {
-                    onHandleListener.onBegin();
-                }
-                //call JNI interface to execute FFmpeg cmd
-                int result = 0;
-                int count = 0;
-                for (String[] command : commands) {
-                    result = handle(command);
-                    count ++;
-                    Log.i(TAG, count + " result=" + result);
-                }
-                if (onHandleListener != null) {
-                    onHandleListener.onEnd(result, "");
-                }
-                mProgressListener = null;
+        handleListener = onHandleListener;
+        ThreadPoolUtil.INSTANCE.executeSingleThreadPool(() -> {
+            if (onHandleListener != null) {
+                onHandleListener.onBegin();
             }
+            //call JNI interface to execute FFmpeg cmd
+            int result = 0;
+            int count = 0;
+            for (String[] command : commands) {
+                result = handle(command);
+                count++;
+                Log.i(TAG, count + " result=" + result);
+            }
+            if (onHandleListener != null) {
+                onHandleListener.onEnd(result, "");
+            }
+            handleListener = null;
         });
     }
 
@@ -107,22 +96,19 @@ public class FFmpegCmd {
     /**
      * execute probe cmd internal
      *
-     * @param commands commands
+     * @param commands         commands
      * @param onHandleListener onHandleListener
      */
     public static void executeProbe(final String[] commands, final OnHandleListener onHandleListener) {
-        ThreadPoolUtil.INSTANCE.executeSingleThreadPool(new Runnable() {
-            @Override
-            public void run() {
-                if (onHandleListener != null) {
-                    onHandleListener.onBegin();
-                }
-                //call JNI interface to execute FFprobe cmd
-                String result = handleProbe(commands);
-                int resultCode = !TextUtils.isEmpty(result) ? RESULT_SUCCESS : RESULT_ERROR;
-                if (onHandleListener != null) {
-                    onHandleListener.onEnd(resultCode, result);
-                }
+        ThreadPoolUtil.INSTANCE.executeSingleThreadPool(() -> {
+            if (onHandleListener != null) {
+                onHandleListener.onBegin();
+            }
+            //call JNI interface to execute FFprobe cmd
+            String result = handleProbe(commands);
+            int resultCode = !TextUtils.isEmpty(result) ? RESULT_SUCCESS : RESULT_ERROR;
+            if (onHandleListener != null) {
+                onHandleListener.onEnd(resultCode, result);
             }
         });
     }
@@ -136,28 +122,19 @@ public class FFmpegCmd {
         return handleProbe(commands);
     }
 
-    private native static int handle(String[] commands);
-
-    private native static void cancelTaskJni(int cancel);
-
-    private native static String handleProbe(String[] commands);
-
-    public native static String getInfo();
-
     public static void onProgressCallback(int position, int duration, @FFmpegState int state) {
-        Log.e(TAG, "onProgress position=" + position
-                + "--duration=" + duration + "--state=" + state);
+        Log.e(TAG, "onProgress position=" + position + "--duration=" + duration + "--state=" + state);
         if (position > duration && duration > 0) {
             return;
         }
-        if (mProgressListener != null) {
+        if (handleListener != null) {
             if (position > 0 && duration > 0) {
                 int progress = position * 100 / duration;
                 if (progress < 100) {
-                    mProgressListener.onProgress(progress, duration);
+                    handleListener.onProgress(progress, duration);
                 }
             } else {
-                mProgressListener.onProgress(position, duration);
+                handleListener.onProgress(position, duration);
             }
         }
     }
@@ -167,10 +144,17 @@ public class FFmpegCmd {
             Log.e(TAG, "from native msg=" + msg);
 
             // silence detect callback
-            if (msg.startsWith("silence") && mProgressListener != null) {
-                mProgressListener.onMsg(msg);
+            if (msg.startsWith("silence") && handleListener != null) {
+                handleListener.onMsg(msg);
             }
         }
     }
 
+    private native static int handle(String[] commands);
+
+    private native static void cancelTaskJni(int cancel);
+
+    private native static String handleProbe(String[] commands);
+
+    public native static String getInfo();
 }

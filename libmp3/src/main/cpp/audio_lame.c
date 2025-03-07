@@ -118,19 +118,14 @@ lame_global_flags *initialize(
     return glf;
 }
 
-jint encode(
-        JNIEnv *env, lame_global_flags *glf,
-        jshortArray buffer_l, jshortArray buffer_r,
-        jint samples, jbyteArray mp3buf) {
+jint encode(JNIEnv *env, lame_global_flags *glf,jshortArray buffer_l, jshortArray buffer_r,jint samples, jbyteArray mp3buf) {
     jshort *j_buffer_l = (*env)->GetShortArrayElements(env, buffer_l, NULL);
-
     jshort *j_buffer_r = (*env)->GetShortArrayElements(env, buffer_r, NULL);
 
     const jsize mp3buf_size = (*env)->GetArrayLength(env, mp3buf);
     jbyte *j_mp3buf = (*env)->GetByteArrayElements(env, mp3buf, NULL);
 
-    int result = lame_encode_buffer(glf, j_buffer_l, j_buffer_r,
-                                    samples, j_mp3buf, mp3buf_size);
+    int result = lame_encode_buffer(glf, j_buffer_l, j_buffer_r,samples, j_mp3buf, mp3buf_size);
 
     (*env)->ReleaseShortArrayElements(env, buffer_l, j_buffer_l, 0);
     (*env)->ReleaseShortArrayElements(env, buffer_r, j_buffer_r, 0);
@@ -139,16 +134,13 @@ jint encode(
     return result;
 }
 
-jint encodeBufferInterleaved(
-        JNIEnv *env, lame_global_flags *glf,
-        jshortArray pcm, jint samples, jbyteArray mp3buf) {
+jint encodeBufferInterleaved(JNIEnv *env, lame_global_flags *glf, jshortArray pcm, jint samples, jbyteArray mp3buf) {
     jshort *j_pcm = (*env)->GetShortArrayElements(env, pcm, NULL);
 
     const jsize mp3buf_size = (*env)->GetArrayLength(env, mp3buf);
     jbyte *j_mp3buf = (*env)->GetByteArrayElements(env, mp3buf, NULL);
 
-    int result = lame_encode_buffer_interleaved(glf, j_pcm,
-                                                samples, j_mp3buf, mp3buf_size);
+    int result = lame_encode_buffer_interleaved(glf, j_pcm,samples, j_mp3buf, mp3buf_size);
 
     (*env)->ReleaseShortArrayElements(env, pcm, j_pcm, 0);
     (*env)->ReleaseByteArrayElements(env, mp3buf, j_mp3buf, 0);
@@ -156,9 +148,7 @@ jint encodeBufferInterleaved(
     return result;
 }
 
-jint flush(
-        JNIEnv *env, lame_global_flags *glf,
-        jbyteArray mp3buf) {
+jint flush(JNIEnv *env, lame_global_flags *glf, jbyteArray mp3buf) {
     const jsize mp3buf_size = (*env)->GetArrayLength(env, mp3buf);
     jbyte *j_mp3buf = (*env)->GetByteArrayElements(env, mp3buf, NULL);
 
@@ -181,32 +171,29 @@ MP3_FUNC(void, lameInitDefault) {
 }
 
 MP3_FUNC(void, lameInit,
-                  jint inSampleRate, jint outChannel, jint outSampleRate, jint outBitrate,
-                  jfloat scaleInput, jint mode, jint vbrMode, jint quality, jint vbrQuality,
-                  jint abrMeanBitrate, jint lowPassFreq, jint highPassFreq, jstring id3tagTitle,
-                  jstring id3tagArtist, jstring id3tagAlbum, jstring id3tagYear,
-                  jstring id3tagComment) {
+         jint inSampleRate, jint outChannel, jint outSampleRate, jint outBitrate,
+         jfloat scaleInput, jint mode, jint vbrMode, jint quality, jint vbrQuality,
+         jint abrMeanBitrate, jint lowPassFreq, jint highPassFreq, jstring id3tagTitle,
+         jstring id3tagArtist, jstring id3tagAlbum, jstring id3tagYear,
+         jstring id3tagComment) {
 
     global_flags = initialize(env, inSampleRate, outChannel, outSampleRate, outBitrate, scaleInput, mode,
-                     vbrMode,
-                     quality, vbrQuality, abrMeanBitrate, lowPassFreq, highPassFreq, id3tagTitle,
-                     id3tagArtist, id3tagAlbum,
-                     id3tagYear,
-                     id3tagComment);
+                              vbrMode,
+                              quality, vbrQuality, abrMeanBitrate, lowPassFreq, highPassFreq, id3tagTitle,
+                              id3tagArtist, id3tagAlbum,
+                              id3tagYear,
+                              id3tagComment);
 }
 
-MP3_FUNC(jint, lameEncode,
-                  jshortArray buffer_l, jshortArray buffer_r, jint samples, jbyteArray mp3buf) {
+MP3_FUNC(jint, lameEncode, jshortArray buffer_l, jshortArray buffer_r, jint samples, jbyteArray mp3buf) {
     return encode(env, global_flags, buffer_l, buffer_r, samples, mp3buf);
 }
 
-MP3_FUNC(jint, encodeBufferInterleaved,
-                  jshortArray pcm, jint samples, jbyteArray mp3buf) {
+MP3_FUNC(jint, encodeBufferInterleaved, jshortArray pcm, jint samples, jbyteArray mp3buf) {
     return encodeBufferInterleaved(env, global_flags, pcm, samples, mp3buf);
 }
 
-MP3_FUNC(jint, lameFlush,
-                  jbyteArray mp3buf) {
+MP3_FUNC(jint, lameFlush, jbyteArray mp3buf) {
     return flush(env, global_flags, mp3buf);
 }
 

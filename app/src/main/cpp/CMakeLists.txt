@@ -42,16 +42,16 @@ set(SRC_METADATA
 set(SRC_FFPLAYER ffplayer)
 
 add_library( # Sets the name of the library.
-             media-handle
+        media-handle
 
-             # Sets the library as a shared library.
-             SHARED
+        # Sets the library as a shared library.
+        SHARED
 
-             # Provides a relative path to your source file(s).
+        # Provides a relative path to your source file(s).
         ${SRC_FFMPEG}
         ${SRC_VISUALIZER}
         ${SRC_METADATA}
-#        ${SRC_FFPLAYER}
+        #        ${SRC_FFPLAYER}
         video_filter.c
         ffprobe_cmd.cpp
         video_cutting.cpp
@@ -64,14 +64,12 @@ add_library( # Sets the name of the library.
         audio_player_jni.cpp
         ff_rtmp_pusher.cpp
         ffmpeg_pusher_jni.cpp
-        )
+        jni_native_ffmpeg.cpp
+)
 
-add_library( ffmpeg
-             SHARED
-             IMPORTED )
-set_target_properties( ffmpeg
-                       PROPERTIES IMPORTED_LOCATION
-                       ../../../../libs/${CMAKE_ANDROID_ARCH_ABI}/libffmpeg.so )
+add_library(ffmpeg SHARED IMPORTED)
+set_target_properties(ffmpeg PROPERTIES IMPORTED_LOCATION
+        ../../../../libs/${CMAKE_ANDROID_ARCH_ABI}/libffmpeg.so)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
@@ -80,26 +78,27 @@ include_directories(include)
 include_directories(metadata)
 include_directories(ffplayer)
 
-if(${CMAKE_ANDROID_ARCH_ABI} MATCHES "armeabi-v7a")
+if (${CMAKE_ANDROID_ARCH_ABI} MATCHES "armeabi-v7a")
     include_directories(include/armeabi-v7a/libavcodec)
     include_directories(include/armeabi-v7a/libavutil)
     message("This is armeabi-v7a")
-elseif(${CMAKE_ANDROID_ARCH_ABI} MATCHES "arm64-v8a")
+elseif (${CMAKE_ANDROID_ARCH_ABI} MATCHES "arm64-v8a")
     include_directories(include/arm64-v8a/libavcodec)
     include_directories(include/arm64-v8a/libavutil)
     message("This is arm64-v8a")
-endif()
+endif ()
 
 find_library( # Sets the name of the path variable.
-              log-lib
-              log )
+        log-lib
+        log
+)
 
 target_link_libraries( # Specifies the target library.
-                       media-handle
-                       ffmpeg
-                       -landroid #native_window
-                       -ljnigraphics #bitmap
-                       -lOpenSLES #openSLES
-                       # Links the target library to the log library
-                       # included in the NDK.
-                       ${log-lib} )
+        media-handle
+        ffmpeg
+        -landroid #native_window
+        -ljnigraphics #bitmap
+        -lOpenSLES #openSLES
+        # Links the target library to the log library
+        # included in the NDK.
+        ${log-lib})
